@@ -3,7 +3,7 @@
 kernel="$(uname)"
 arch="$(uname -m)"
 
-PACKAGES="openjdk-11-jdk"
+PACKAGES="openjdk-11-jdk vim"
 
 case $kernel in
 	Linux)
@@ -24,7 +24,15 @@ case $kernel in
 		elif [ "${arch}" = "aarch64" ]; then
 		
 			echo "Adding Cassandra Debian packages"
-			echo "deb [arch=arm64] https://downloads.apache.org/cassandra/debian 40x main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
+			echo "deb [arch=$(dpkg --print-architecture)] https://downloads.apache.org/cassandra/debian 40x main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
+			curl https://downloads.apache.org/cassandra/KEYS | sudo apt-key add -
+			sudo apt update
+			sudo apt install cassandra
+			
+		elif [ "${arch}" = "x86_64" ]: then
+		
+			echo "Adding Cassandra Debian packages"
+			echo "deb https://downloads.apache.org/cassandra/debian 40x main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
 			curl https://downloads.apache.org/cassandra/KEYS | sudo apt-key add -
 			sudo apt update
 			sudo apt install cassandra
